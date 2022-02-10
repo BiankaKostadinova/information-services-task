@@ -1,143 +1,138 @@
-create or replace table airlines
+create or replace table airline
 (
-    airline_id    int auto_increment
+    id            int auto_increment
         primary key,
-    airline_name  varchar(20) not null,
-    airline_phone varchar(30) not null,
-    airline_code  char(4)     not null,
-    constraint airlines_airline_email_uindex
+    airline_name  varchar(100) not null,
+    airline_phone varchar(30)  not null,
+    airline_code  char(4)      not null,
+    constraint airline_airline_code_uindex
         unique (airline_code),
-    constraint airlines_airline_name_uindex
-        unique (airline_name),
-    constraint airlines_airline_phone_uindex
+    constraint airline_airline_phone_uindex
         unique (airline_phone)
 );
 
-create or replace table airplanes
+create or replace table airplane
 (
-    airplane_id    int auto_increment
+    id             int auto_increment
         primary key,
     model_aircraft char(4) not null,
-    capacity       int     null,
+    capacity       int     not null,
     airline_id     int     null,
-    constraint airplanes_airlines_fk
-        foreign key (airline_id) references airlines (airline_id)
+    constraint airplane_airline_fk
+        foreign key (airline_id) references airline (id)
 );
 
-create or replace table cities
+create or replace table country
 (
-    city_id   int auto_increment
+    id           int auto_increment
         primary key,
-    city_name varchar(14) not null,
-    country_id   int         null,
-    constraint cities_city_name_uindex
-        unique (city_name),
-    constraint cities_countries_fk
-        foreign key (country_id) references countries (country_id)
-
-);
-
-create or replace table airports
-(
-    airport_id   int auto_increment
-        primary key,
-    airport_name varchar(45) not null,
-    country_id   int         null,
-    city_id      int         null,
-    constraint airports_airport_name_uindex
-        unique (airport_name),
-    constraint airports_cities_fk
-        foreign key (city_id) references cities (city_id),
-    constraint airports_countries_fk
-            foreign key (country_id) references countries (country_id)
-);
-
-create or replace table countries
-(
-    country_id   int auto_increment
-        primary key,
-    country_name varchar(15) not null,
-    code         char(4)     not null,
-    constraint countries_code_uindex
-        unique (code),
-    constraint countries_country_name_uindex
+    country_name varchar(20) not null,
+    country_code char(4)     not null,
+    constraint country_country_code_uindex
+        unique (country_code),
+    constraint country_country_name_uindex
         unique (country_name)
 );
 
-create or replace table destinations
+create or replace table city
 (
-    destination_id   int auto_increment
+    id         int auto_increment
         primary key,
-    destination_name varchar(45) not null,
-    country_id       int         null,
-    constraint destinations_countries_fk
-        foreign key (country_id) references countries (country_id)
+    city_name  varchar(20) not null,
+    country_id int         null,
+    constraint city_country_fk
+        foreign key (country_id) references country (id)
 );
 
-create or replace table routes
+create or replace table airport
 (
-    route_id       int auto_increment
+    id           int auto_increment
         primary key,
-    air_distance   varchar(20) not null,
-    destination_id int         null,
-    constraint route_destinations_fk
-        foreign key (destination_id) references destinations (destination_id)
+    airport_name varchar(50) not null,
+    country_id   int         null,
+    city_id      int         null,
+    constraint airport_city_fk
+        foreign key (city_id) references city (id),
+    constraint airport_country_fk
+        foreign key (country_id) references country (id)
 );
 
-create or replace table flights
+create or replace table crew_category
 (
-    flight_id      int auto_increment
+    id          int auto_increment
+        primary key,
+    description varchar(50) not null
+);
+
+create or replace table crew
+(
+    id                int auto_increment
+        primary key,
+    first_name        varchar(120) not null,
+    last_name         varchar(128) not null,
+    personnel_license varchar(15)  not null,
+    phone             varchar(30)  not null,
+    crew_category_id  int          null,
+    constraint crew_personnel_license_uindex
+        unique (personnel_license),
+    constraint crew_phone_uindex
+        unique (phone),
+    constraint crew_crew_category_fk
+        foreign key (crew_category_id) references crew_category (id)
+);
+
+create or replace table route
+(
+    id                int auto_increment
+        primary key,
+    departure_airport varchar(100) not null,
+    arrival_airport   varchar(100) not null,
+    air_distance      varchar(20)  not null,
+    constraint route_arrival_airport_uindex
+        unique (arrival_airport),
+    constraint route_departure_airport_uindex
+        unique (departure_airport)
+);
+
+create or replace table flight
+(
+    id             int auto_increment
         primary key,
     departure_time timestamp   null,
     arrival_time   timestamp   null,
     status         varchar(20) not null,
-    airline_id    int         null,
-    route_id       int         null,
     flight_number  varchar(10) not null,
-    constraint flights_airlines_fk
-        foreign key (airline_id) references airlines (airline_id),
-    constraint flights_route_fk
-        foreign key (route_id) references routes (route_id)
+    route_id       int         null,
+    airline_id     int         null,
+    constraint flight_airline_fk
+        foreign key (airline_id) references airline (id),
+    constraint flight_route_fk
+        foreign key (route_id) references route (id)
 );
 
-create or replace table cabin_crews
+create or replace table flight_crew
 (
-    cabin_crew_id     int auto_increment
-        primary key,
-    first_name        varchar(15) not null,
-    last_name         varchar(15) not null,
-    designation       varchar(10) not null,
-    phone             varchar(30) not null,
-    personnel_license varchar(15) not null,
-    flight_id         int         null,
-    constraint cabin_crews_flights_fk
-        foreign key (flight_id) references flights (flight_id)
+    flight_id int null,
+    crew_id   int null,
+    constraint flight_crew_crew_fk
+        foreign key (crew_id) references crew (id),
+    constraint flight_crew_flight_fk
+        foreign key (flight_id) references flight (id)
 );
 
-create or replace table passengers
+create or replace table passenger
 (
-    passenger_id    int auto_increment
+    id              int auto_increment
         primary key,
-    first_name      varchar(15) not null,
-    last_name       varchar(20) not null,
-    passport_number varchar(15) not null,
-    ticket_number   varchar(30) not null,
-    flight_id       int         null,
-    constraint passengers_passport_number_uindex
-        unique (passport_number),
-    constraint passengers_ticket_number_uindex
+    first_name      varchar(100) not null,
+    last_name       varchar(120) not null,
+    passport_number varchar(30)  not null,
+    ticket_number   varchar(30)  not null,
+    flight_id       int          null,
+    constraint passenger_ticket_number_uindex
         unique (ticket_number),
-    constraint passengers_flights_fk
-        foreign key (flight_id) references flights (flight_id)
+    constraint passenger_flight_fk
+        foreign key (flight_id) references flight (id)
 );
 
-create or replace table airports_airlines
-(
-    airport_id int null,
-    airline_id int null,
-    constraint airports_airlines_airlines_fk
-        foreign key (airline_id) references airlines (airline_id),
-    constraint airports_airlines_airports_fk
-        foreign key (airport_id) references airports (airport_id)
-);
 

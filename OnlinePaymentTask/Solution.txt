@@ -1,0 +1,28 @@
+The following steps will decsribe the flow diagram of the actions that will be taken form the application:
+
+1. Login 
+   - if not succesfull, we return the user to login page
+   - if succesfull, we proceed with the basic chekcs. These basic checks includes the card expiration date and owner of the card. That card should be already added if the user wants to perform some orders.
+     -- if the expirates date is exceeded, we shall notify the user.
+     -- if the user name are not equal to the card holder name, we shall notify the user.
+     -- these actions should be stored in application DB: login date and errors if raised during the background checks.
+   - order
+     -- check quantity of the product
+     -- if it's in stock, and could be orderd and deliverd to the customer, we shall proceed to the payment.
+     -- if it's not in stock, and could not be orderd and deliverd to the customer, we shall notify the user.
+     -- these actions should be stored in application DB: order history adn actions.
+   - payment
+     -- if all of the previous steps are succesfull, we shall store all of the information that we have currently in application DB, and mark the status of the order to requested payment.
+     -- we send request to the Bank APi with the informartion that we already collected as:
+        --- card number
+        --- card holder names
+        --- expiration date
+        --- secret key
+   - if the bank confirms the amount and successfull operations  
+     -- update the order status from request payment to paid in application DB
+     -- notify the user for that action.
+   - if the bank rejects the trabsaction
+     -- update the order status from request payment to rejected in application DB
+     -- notify the user for that action.
+
+

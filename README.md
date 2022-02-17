@@ -30,6 +30,21 @@
 
 Solution is located into AirportManagementSystemTask folder.
 
+Slagger documentation could be found into: http://localhost:8080/swagger-ui/index.html#/
+
+Unit tests are located into test/
+
+
+Used technologies:
+
+ - Java 11
+ - Spring Framework
+ - MariaDB
+ - Hibernate
+ - Mockito
+ - Bootstrap
+
+
 
 # Task 2:
 

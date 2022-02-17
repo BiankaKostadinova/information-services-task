@@ -1,3 +1,7 @@
+create database airport_management_system;
+
+USE `airport_management_system`;
+
 create or replace table airline
 (
     id            int auto_increment
@@ -112,6 +116,8 @@ create or replace table flight
 
 create or replace table flight_crew
 (
+    id             int auto_increment
+        primary key,
     flight_id int null,
     crew_id   int null,
     constraint flight_crew_crew_fk
@@ -134,5 +140,3 @@ create or replace table passenger
     constraint passenger_flight_fk
         foreign key (flight_id) references flight (id)
 );
-
-

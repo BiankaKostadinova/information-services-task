@@ -44,4 +44,5 @@ public class FlightServiceImpl implements FlightService {
     public void deleteById(Flight flight, int id) {
         flightRepository.deleteById(id);
     }
+
 }

@@ -70,4 +70,5 @@ public class PassengerServiceImpl implements PassengerService {
             throw new EntityNotFoundException("Passenger", "passportNumber", passenger.getPassportNumber());
         }
     }
+
 }

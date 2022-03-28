@@ -1,6 +1,5 @@
 package com.airport.management.system.airportmanagementsystem.services.interfaces;
 
-import com.airport.management.system.airportmanagementsystem.models.Crew;
 import com.airport.management.system.airportmanagementsystem.models.Passenger;
 import org.springframework.stereotype.Service;
 
@@ -17,4 +16,6 @@ public interface PassengerService {
     Passenger save(Passenger passenger);
 
     Passenger update(int id, Passenger passenger);
+
+
 }
